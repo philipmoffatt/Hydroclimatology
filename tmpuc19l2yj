@@ -1,0 +1,87 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct 20 10:53:26 2021
+
+@author: philip.moffatt
+"""
+
+import pandas as pd
+import matplotlib as plt
+import numpy as np
+import glob
+
+china4 = pd.read_csv('hw2RawData/China4.csv', parse_dates= {'Date': ['Year', 'Month', 'Day']},keep_date_col=True)
+china8 = pd.read_csv('hw2RawData/China8.csv', header=9, parse_dates= {'Date': ['Year', 'Month', 'Day']},keep_date_col=True)
+Norway4 = pd.read_csv('hw2RawData/NorESM1_M4.csv', header=9, parse_dates= {'Date': ['Year', 'Month', 'Day']},keep_date_col=True)
+Norway8 = pd.read_csv('hw2RawData/NorESM1_M8.csv', header=9, parse_dates= {'Date': ['Year', 'Month', 'Day']},keep_date_col=True)
+US4 = pd.read_csv('hw2RawData/GFDL_ESM2M4.csv', header=9, parse_dates= {'Date': ['Year', 'Month', 'Day']},keep_date_col=True)
+US8 = pd.read_csv('hw2RawData/GFDL_ESM2M8.csv', header=9, parse_dates= {'Date': ['Year', 'Month', 'Day']},keep_date_col=True)
+history = pd.read_csv('hw2RawData/GRIDMET.csv', header=9, parse_dates= {'Date': ['Year', 'Month', 'Day']},keep_date_col=True)
+
+china4.columns = ['Date','Year', 'Month', 'Day', 'taMax', 'taMin', 'prcp']
+china8.columns = ['Date','Year', 'Month', 'Day', 'taMax', 'taMin', 'prcp']
+Norway4.columns = ['Date','Year', 'Month', 'Day', 'taMax', 'taMin', 'prcp']
+Norway8.columns = ['Date','Year', 'Month', 'Day', 'taMax', 'taMin', 'prcp']
+US4.columns = ['Date','Year', 'Month', 'Day', 'taMax', 'taMin', 'prcp']
+US8.columns = ['Date','Year', 'Month', 'Day', 'taMax', 'taMin', 'prcp']
+history.columns = ['Date','Year', 'Month', 'Day', 'taMin', 'taMax', 'prcp']
+
+C4prcp_monthly = china4.groupby(["Year", "Month"])[["prcp"]].sum()
+C8prcp_monthly = china8.groupby(["Year", "Month"])[["prcp"]].sum()
+N4prcp_monthly = Norway4.groupby(["Year", "Month"])[["prcp"]].sum()
+N8prcp_monthly = Norway8.groupby(["Year", "Month"])[["prcp"]].sum()
+US4prcp_monthly = US4.groupby(["Year", "Month"])[["prcp"]].sum()
+US8prcp_monthly = US8.groupby(["Year", "Month"])[["prcp"]].sum()
+Hist_prcp_monthly = history.groupby(["Year", "Month"])[["prcp"]].sum()
+
+C4taMax_monthly = china4.groupby(["Year", "Month"])[["taMax"]].mean()
+C8taMax_monthly = china8.groupby(["Year", "Month"])[["taMax"]].mean()
+N4taMax_monthly = Norway4.groupby(["Year", "Month"])[["taMax"]].mean()
+N8taMax_monthly = Norway8.groupby(["Year", "Month"])[["taMax"]].mean()
+US4taMax_monthly = US4.groupby(["Year", "Month"])[["taMax"]].mean()
+US8taMax_monthly = US8.groupby(["Year", "Month"])[["taMax"]].mean()
+Hist_taMax_monthly = history.groupby(["Year", "Month"])[["taMax"]].mean()
+C4taMin_monthly = china4.groupby(["Year", "Month"])[["taMin"]].mean()
+C8taMin_monthly = china8.groupby(["Year", "Month"])[["taMin"]].mean()
+N4taMin_monthly = Norway4.groupby(["Year", "Month"])[["taMin"]].mean()
+N8taMin_monthly = Norway8.groupby(["Year", "Month"])[["taMin"]].mean()
+US4taMin_monthly = US4.groupby(["Year", "Month"])[["taMin"]].mean()
+US8taMin_monthly = US8.groupby(["Year", "Month"])[["taMin"]].mean()
+Hist_taMin_monthly = history.groupby(["Year", "Month"])[["taMin"]].mean()
+
+
+C4_monthly = pd.merge(pd.merge(C4taMax_monthly, C4taMin_monthly, left_index=True, 
+                      right_index=True), C4prcp_monthly, left_index=True,
+                      right_index=True)
+C8_monthly = pd.merge(pd.merge(C8taMax_monthly, C8taMin_monthly, left_index=True, 
+                      right_index=True), C8prcp_monthly, left_index=True,
+                      right_index=True)
+N4_monthly = pd.merge(pd.merge(N4taMax_monthly, N4taMin_monthly, left_index=True, 
+                      right_index=True), N4prcp_monthly, left_index=True,
+                      right_index=True)
+N8_monthly = pd.merge(pd.merge(N8taMax_monthly, N8taMin_monthly, left_index=True, 
+                      right_index=True), N8prcp_monthly, left_index=True,
+                      right_index=True)
+US4_monthly = pd.merge(pd.merge(US4taMax_monthly, US4taMin_monthly, left_index=True, 
+                      right_index=True), US4prcp_monthly, left_index=True,
+                      right_index=True)
+US8_monthly = pd.merge(pd.merge(US8taMax_monthly, US8taMin_monthly, left_index=True, 
+                      right_index=True), US8prcp_monthly, left_index=True,
+                      right_index=True)
+Hist_monthly = pd.merge(pd.merge(Hist_taMax_monthly, Hist_taMin_monthly, left_index=True, 
+                      right_index=True), Hist_prcp_monthly, left_index=True,
+                      right_index=True)
+
+C4_monthly.to_csv('C4_monthly')
+C8_monthly.to_csv('C8_monthly')
+N4_monthly.to_csv('N4_monthly')
+N8_monthly.to_csv('N8_monthly')
+US4_monthly.to_csv('US4_monthly')
+US8_monthly.to_csv('US8_monthly')
+Hist_monthly.to_csv('Hist_monthly')
+
+
+
+
+
+
